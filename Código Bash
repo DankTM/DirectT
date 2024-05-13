@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Função para listar diretórios
+listar_diretorios() {
+    echo -e "\e[1m\e[34m📂 === Lista de Diretórios ===\e[0m"
+    find . -maxdepth 1 -type d -exec basename {} \; | sed '/^\.$/d' | sed 's/^/📁 /'
+}
+
+# Função para criar um novo diretório
+criar_diretorio() {
+    echo -e "\e[1m\e[33m📁 Criar Novo Diretório\e[0m"
+    read -p "Nome do novo diretório: " novo_diretorio
+    if [ -z "$novo_diretorio" ]; then
+        echo -e "\e[1;31mNome inválido. Tente novamente.\e[0m"
+    else
+        mkdir "$novo_diretorio" && echo -e "\e[1;32mDiretório '$novo_diretorio' criado.\e[0m" || echo -e "\e[1;31mFalha ao criar diretório.\e[0m"
+    fi
+}
+
+# Função para excluir um diretório
+excluir_diretorio() {
+    echo -e "\e[1m\e[31m🗑️ Excluir Diretório\e[0m"
+    read -p "Nome do diretório a ser excluído: " diretorio_excluir
+    if [ -z "$diretorio_excluir" ]; then
+        echo -e "\e[1;31mNome inválido. Tente novamente.\e[0m"
+    else
+        rm -rf "$diretorio_excluir" 2>/dev/null && echo -e "\e[1;32mDiretório '$diretorio_excluir' excluído.\e[0m" || echo -e "\e[1;31mFalha ao excluir diretório.\e[0m"
+    fi
+}
+
+# Função para acessar um diretório
+acessar_diretorio() {
+    echo -e "\e[1m\e[35m📂 Acessar Diretório\e[0m"
+    read -p "Nome do diretório: " nome_dir
+    cd "$nome_dir" 2>/dev/null || echo -e "\e[1;31mDiretório não encontrado.\e[0m"
+}
+
+# Loop do menu
+while true; do
+    echo -e "\e[1m\e[33m=== DirectT - Gerenciador de Diretórios ===\e[0m"
+    echo -e "Selecione uma opção:"
+    echo -e "1. \e[1;36mListar diretórios\e[0m 📂"
+    echo -e "2. \e[1;36mCriar diretório\e[0m 📁"
+    echo -e "3. \e[1;36mExcluir diretório\e[0m 🗑️"
+    echo -e "4. \e[1;36mAcessar diretório\e[0m 📂"
+    echo -e "5. \e[1;36mSair\e[0m 🚪"
+
+    read -p "Opção: " opcao
+
+    case $opcao in
+        1) listar_diretorios ;;
+        2) criar_diretorio ;;
+        3) excluir_diretorio ;;
+        4) acessar_diretorio ;;
+        5) echo -e "\e[1;33mSaindo...\e[0m"; break ;;
+        *) echo -e "\e[1;31mOpção inválida.\e[0m" ;;
+    esac
+done
